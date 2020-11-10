@@ -23,15 +23,54 @@ div.append(divPuzzle) // insert divPuzzle after tag div, but in him
 // }
 
 function init() {
-        var canvas = document.createElement('canvas');
+        let canvas = document.createElement('canvas');
+        canvas.classList.add('canvas')
         canvas.width = '410' // size of container
         canvas.height = '410'
-        if (canvas.getContext) {
-            var context = canvas.getContext('2d');
-            context.fillStyle = 'red' // background-color
-            context.fillRect(0, 0, canvas.width, canvas.height); // paint over the canvas
-            divPuzzle.append(canvas)
+        let cellSize = canvas.width / 4
+        let context = canvas.getContext('2d');
+        let field = new game() // create object of game
+        field.mix(350) // перемешиваем содержимое коробки
+        field.setCellView(function(x,y) { // задаём внешний вид пятнашки
+            
+            context.fillStyle = '#9ACD32'  // background-color
+            context.arc(100, 75, 50, 0, 2 * Math.PI);
+            context.fillRect(x+1, y+1, cellSize-2, cellSize-2); // paint over the canvas
+        })
+        field.setNumView(function() { // параметры шрифта для цифр
+            context.font = "bold "+(cellSize/2)+"px Sans"
+            context.textAlign = "center"
+            context.textBaseline = "middle"
+            context.fillStyle = "#FFFFFF"
+        })
+        context.fillStyle = "#FFE4B5"
+        context.fillRect(0, 0, canvas.width, canvas.height)
+        field.draw(context, cellSize)
+
+        function event(x, y) { // функция производит необходимые действие при клике(касанию)
+            field.move(x, y);
+            context.fillStyle = "#FFE4B5"
+            context.fillRect(0, 0, canvas.width, canvas.height)
+            field.draw(context, cellSize)
+            if (field.victory()) { // если головоломка сложена, то пятнашки заново перемешиваются
+                alert("Собрано за "+ field.getClicks() + " касание!") // вывод сообщения о выигрыше!!
+                field.mix(300)
+                context.fillStyle = "#FFE4B5"
+                context.fillRect(0, 0, canvas.width, canvas.height)
+                field.draw(context, cellSize)
+            }
         }
+        canvas.onclick = function(e) { // обрабатываем клики мышью
+            var x = (e.pageX - canvas.offsetLeft) / cellSize | 0;
+            var y = (e.pageY - canvas.offsetTop)  / cellSize | 0;
+            event(x, y); // выхов функции действия
+        }
+        canvas.ontouchend = function(e) { // обрабатываем касания пальцем
+            var x = (e.touches[0].pageX - canvas.offsetLeft) / cellSize | 0
+            var y = (e.touches[0].pageY - canvas.offsetTop)  / cellSize | 0 
+            event(x, y)
+        }
+        divPuzzle.append(canvas)
 }
 
 function game() { // logic of game
@@ -62,21 +101,21 @@ function game() { // logic of game
 		}
     }
     
-    this.getClicks =() => { // number of clicks
+    this.getClicks = function() { // number of clicks
         return clicks;
     }
 
-    this.move = (x,y) => { // the method moves the "15" to an empty box
+    this.move = function(x,y) { // the method moves the "15" to an empty box
         let nullX = getEmpty().x;
         let nullY = getEmpty().y;
         if (( (x - 1 === nullX || x + 1 === nullX) &&  y === nullY) || ((y - 1 === nullY || y + 1 === nullY) &&  x === nullX)) {
-            arr[nullY][nullX] = arr[j][i]
-            arr[j][i] = 0
+            arr[nullY][nullX] = arr[y][x]
+            arr[y][x] = 0
             clicks++
         }
     }
 
-    this.victory = () => { // the method check condition of victory
+    this.victory = function() { // the method check condition of victory
         let res = true
         arrVic = [
             [1, 2, 3, 4],
@@ -92,18 +131,68 @@ function game() { // logic of game
         return res
     }
 
-    this.mix = () => { // метод "перемешивает" фишки
-        for (i = 0; i < WIDTH; i++) {
-            for (j = 0; j < HEIGHT; j++) {
-                
+    this.mix = function(stepCount) { // метод "перемешивает" фишки ??????
+        let x, y
+        for (let i = 0; i < stepCount; i++) {
+            let nullX = getEmpty().x
+            let nullY = getEmpty().y
+            let hMove = getRandomBool()
+            let upLeft = getRandomBool()
+            if (!hMove && !upLeft) { y = nullY; x = nullX - 1}
+            if (hMove && !upLeft)  { x = nullX; y = nullY + 1}
+            if (!hMove && upLeft)  { y = nullY; x = nullX + 1}
+            if (hMove && upLeft)   { x = nullX; y = nullY - 1}
+            if (0 <= x && x <= 3 && 0 <= y && y <= 3) {
+                this.move(x, y)
             }
         }
+        clicks = 0
     }
+    
+	this.setCellView = function(func) { // внешний вид пятнашки
+		cell = func;
+	};
+	
+	this.setNumView = function(func) { // параметры шрифта цифр
+		num = func;
+    };
+    
+    this.draw = function(context, size) { // рисует "пятнашки" на холсте
+		for (var i = 0; i < WIDTH; i++) {
+			for (var j = 0; j < HEIGHT; j++) {
+				if (arr[i][j] > 0) {
+					if (cell !== null) {
+						cell(j * size, i * size);
+					}
+					if (num !== null) {
+						num();
+						context.fillText(arr[i][j], j * size + size / 2, i * size + size / 2);
+					}
+				}
+			}
+		}
+    };
+    
 }
 
 document.body.addEventListener("click", init())
 
 
+// let query = () => {
+//     let num
+//     let res = []
+//     let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0]
+//     for (i = 0; i < 4; i++) {
+//         for (j = 0; j < 4; j++) {
+//             num = arr[Math.floor(0 + Math.random() * 16)]
+//             res += num
 
+//             numIndex = arr.indexOf(num)
+//             if (numIndex > -1) arr.splice(numIndex, 1)
 
-
+//             console.log(`${num} num, ${res} res, ${numIndex} numIndex, ${arr} arr`)
+//         }
+        
+//     }
+// }
+// query()

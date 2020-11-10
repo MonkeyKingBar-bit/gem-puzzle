@@ -4,10 +4,13 @@ body {
     background: linear-gradient(to right, #00FF6C, #f1da36);
 }
 
-.gameContainer {
-    max-height: 50vh;
-    max-width: 50vw;
+.game {
+    max-height: 100vh;
+    max-width: 100vh;
     margin: 0 auto;
+}
+
+.gameContainer {
     padding-top: 20px;
     color: white;
     text-shadow:green 2px 2px 0.5px;
@@ -17,18 +20,25 @@ body {
 }
 
 .puzzleContainer {
-    margin: 15px auto;  
+    margin: 25px auto;  
 }
 
 .canvas {
-    width: 150px;
-    height: 150px;
+    width: 410px;
+    height: 410px;
     border: 1px;
-    border-color: #9ACD32;
-    border-radius: 8px;
-    outline-color: whitesmoke;
-    color: white;
-    font-size: 35px;
+    border-radius: 16px;
     cursor: pointer;
+}
+
+@media screen and (max-width: 409px) and (min-width: 320px) {
+    .gameContainer {
+        font-size: 40px;
+    }
+
+    .canvas {
+        width: 310px;
+        height: 310px;
+    }
 }
 
