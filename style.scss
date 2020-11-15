@@ -11,6 +11,10 @@ body {
 }
 
 .gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     padding-top: 1.25rem; // 20px / 16px
     color: white;
     text-shadow:green 2px 2px 0.5px;
@@ -37,24 +41,81 @@ footer {
     align-items: center;
     margin: 0 auto;
     font-size: 1.7rem;
+
+    .time {
+        color: white;
+        text-shadow:green 1px 1px 0.5px;
+        text-align: center;
+        margin-right: 15px;
+    }
+    
+    .pause {
+        color: white;
+        text-shadow:green 1px 1px 0.5px;
+        text-align: center; 
+        cursor: pointer;
+    
+        &:hover{
+            color: green;
+            text-shadow:white 1px 1px 0.5px;
+        }
+    }
 }
 
-.time {
-    color: white;
-    text-shadow:green 1px 1px 0.5px;
-    text-align: center;
-    margin-right: 15px;
+.pauseMenu {
+    position: absolute;
+    background: rgba(0, 0, 0, .5);
+    opacity: 0.7;
+    width: 210px;
+    height: 310px;
+    margin: 46px auto 0;
+    display: flex;
+    flex-direction: column;
+    
+    // transform: translate(-50%, -50%);
+    //transition: top 1s ease-out 0.5s;
+
+    .navPause {
+        margin: 20px auto;
+        font-size: 1.3rem;
+        color: white;
+        cursor: pointer;
+
+        &:hover{
+            color: green;
+            text-shadow:white 1px 1px 0.6px;
+        }
+    }
 }
 
-.pause {
-    color: white;
-    text-shadow:green 1px 1px 0.5px;
-    text-align: center; 
+.rulesContainer {
+    margin: 10px auto;
+    font-size: 2rem;
+}
+
+.rulesContent {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    line-height: 150%;
+}
+
+.goBack {
+    font-size: 0.9rem;
+    font-weight: 900;
     cursor: pointer;
+    margin-top: 30px;
 }
 
-.shadow {
-    background: grey;
+.settingsContainer {
+    margin-top: 20px;
+    font-size: 1rem;
+    line-height: 150%;
+}
+
+.sel1Obj {
+    width: 55px;
+    margin: 5px auto;
+    outline: none;
 }
 
 @media screen and (max-width: 460px) and (min-width: 320px) {

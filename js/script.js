@@ -79,9 +79,10 @@ div.innerText = 'The Gem Puzzle'
 section.prepend(div) // insert div after tag section, but in him
 
 const divPuzzle = document.createElement('div')
+divPuzzle.className = 'divPuzzle'
 divPuzzle.classList.add('puzzleContainer') // add style
 div.append(divPuzzle) // insert divPuzzle after tag div, but in him
-
+// ------------------------- FOOTER -------------------------- //
 const footer = document.createElement('footer')
 footer.classList.add('footer')
 section.after(footer)
@@ -97,9 +98,99 @@ moves.classList.add('time')
 time.after(moves)
 
 const pause = document.createElement('h3')
-pause.innerText = 'Pause'
+pause.innerHTML = 'Menu'
 pause.classList.add('pause')
 moves.after(pause)
+// ----------------------- PAUSE MENU ---------------------------------------//
+const pauseMenu = document.createElement('div')
+pauseMenu.classList.add('pauseMenu')
+
+const newGame = document.createElement('a')
+newGame.textContent = 'New Game'
+newGame.classList.add('navPause')
+
+const saveGame = document.createElement('a')
+saveGame.textContent = 'Saved Games'
+saveGame.classList.add('navPause')
+
+const bestScores = document.createElement('a')
+bestScores.textContent = 'Best Scores'
+bestScores.classList.add('navPause')
+
+const rules = document.createElement('a')
+rules.textContent = 'Rules'
+rules.classList.add('navPause')
+
+const settings = document.createElement('a')
+settings.textContent = 'Settings'
+settings.classList.add('navPause')
+
+pauseMenu.append(newGame, saveGame, bestScores, rules, settings)
+
+// ------------------------- RULES ------------------------------ //
+let rulesContainer = document.createElement('div')
+rulesContainer.classList.add('pauseMenu')
+
+const rulesTitle = document.createElement('p')
+rulesTitle.textContent = 'Rules of Gem Puzzle'
+rulesTitle.classList.add('rulesContainer')
+
+const rulesContent = document.createElement('p')
+rulesContent.textContent = `The object of the puzzle is to place the tiles in order by making sliding moves that use the empty space.
+You can save your game and load it later. Also you can choose game field size or a picture in Settings`
+rulesContent.classList.add('rulesContent')
+
+const goBack = document.createElement('a')
+goBack.textContent = 'go back'
+goBack.classList.add('goBack')
+
+rulesContainer.append(rulesTitle, rulesContent, goBack)
+
+// -----------------------SETTINGS --------------------------//
+const settingsContainer = document.createElement('div')
+settingsContainer.classList.add('pauseMenu')
+
+const settingsTitle = document.createElement('p')
+settingsTitle.textContent = 'Settings'
+settingsTitle.classList.add('rulesContainer')
+// FIELD SIZE //
+const label1 = document.createElement('label')
+label1.textContent = 'Field Size:'
+label1.classList.add('settingsContainer')
+
+const label1Select = document.createElement('SELECT')
+label1Select.classList.add('sel1Obj')
+
+const sel1Option1 = document.createElement('option')
+sel1Option1.text = '3 x 3'
+label1Select.options.add(sel1Option1, 1)
+
+const sel1Option2 = document.createElement('option')
+sel1Option2.text = '4 x 4'
+label1Select.options.add(sel1Option2, 2)
+
+const sel1Option3 = document.createElement('option')
+sel1Option3.text = '5 x 5'
+label1Select.options.add(sel1Option3, 3)
+
+const sel1Option4 = document.createElement('option')
+sel1Option4.text = '6 x 6'
+label1Select.options.add(sel1Option4, 4)
+
+const sel1Option5 = document.createElement('option')
+sel1Option5.text = '7 x 7'
+label1Select.options.add(sel1Option5, 5)
+
+const sel1Option6 = document.createElement('option')
+sel1Option6.text = '8 x 8'
+label1Select.options.add(sel1Option6, 6)
+
+const goBackSet = document.createElement('a')
+goBackSet.textContent = 'go back'
+goBackSet.classList.add('goBack')
+
+settingsContainer.append(settingsTitle, label1, label1Select, goBackSet)
+
 
 // function gameFooter() {
 //     let result = '';
@@ -183,7 +274,7 @@ function init() {
             
             moves.textContent = (`Moves: ${field.getClicks()}`) // количество шагов 
 
-            let audioElement = new Audio('audio.mp3')
+            let audioElement = new Audio('audio.mp3') //звук по нажатию на фишку
             audioElement.play()
         })
         // canvas.addEventListener('mou')
@@ -302,8 +393,8 @@ function game() { // logic of game
             let res = new Date(Date.now() - timeStart)
             time.textContent = `Time: ${res.getMinutes()} : ${res.getSeconds()}`
         }, 1000)
-        
     }
+
 }
 
 // window.addEventListener("DOMContentLoaded", function () {
@@ -313,9 +404,51 @@ function game() { // logic of game
 document.body.addEventListener("click", init())
 
 pause.addEventListener('click', () => {
-    let check = prompt("For continue write a number and press on 'Ok' or choose 'Cancel'")
-    
+    let isSave = confirm('Do you want to save this game?')
+    if (isSave) divPuzzle.before(pauseMenu) 
+    else divPuzzle.before(pauseMenu)
 })
+
+rules.addEventListener('click', () => {
+    pauseMenu.style.visibility = 'hidden'
+    rulesContainer.style.visibility = 'visible'
+    pauseMenu.before(rulesContainer)
+})
+
+goBack.addEventListener('click', () => {
+    rulesContainer.style.visibility = 'hidden'
+    settingsContainer.style.visibility = 'hidden'
+    pauseMenu.style.visibility = 'visible'
+})
+
+settings.addEventListener('click', () => {
+    pauseMenu.style.visibility = 'hidden'
+    settingsContainer.style.visibility = 'visible'
+    pauseMenu.before(settingsContainer)
+})
+
+goBackSet.addEventListener('click', () => {
+    settingsContainer.style.visibility = 'hidden'
+    pauseMenu.style.visibility = 'visible'
+})
+// function pause() {
+//     let pauseMenu = document.createElement('div')
+//     pauseMenu.classList.add('shadow')
+//     let saveGame = document.createElement('a')
+//     saveGame.textContent = 'Do you want to save game?'
+//     let newGame = document.createElement('a')
+//     newGame.textContent = 'New Game'
+//     saveGame.appendChild(newGame)
+//     let savedGames = document.createElement('a')
+//     savedGames.textContent = 'Saved Games'
+//     let bestScore = document.createElement('a')
+//     bestScore.textContent = 'Best Scores'
+//     let rules = document.createElement('a')
+//     rules.textContent = 'Rules'
+// }
+
+// pause.addEventListener('click', pause())
+    
 
 // let query = () => {
 //     let num
