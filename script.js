@@ -1,74 +1,3 @@
-// const Puzzle = {
-//     init() {
-//         this.elements.main = document.createElement('section')
-//         this.elements.gameContainer = document.createElement('div')
-//         this.elements.puzzleContainer = document.createElement('div')
-
-//         this.elements.classList.add('game')
-//         this.elements.classList.add('gameContainer')
-//         this.elements.classList.add('puzzleContainer')
-//         this.elements.puzzleContainer.appendChild(this._drawPuzzle())
-//     },
-
-//     _drawPuzzle() {
-//         let canvas = document.createElement('canvas');
-//         canvas.classList.add('canvas')
-//         canvas.width = '410' // size of container
-//         canvas.height = '410'
-//         let cellSize = canvas.width / 4
-//         let context = canvas.getContext('2d');
-//         let field = new game() // create object of game
-//         field.mix(350) // перемешиваем содержимое коробки
-//         field.setCellView(function(x,y) { // задаём внешний вид пятнашки
-//             context.fillStyle = '#9ACD32'  // background-color
-//             //context.draggable = 'true' // фишки можно перетягивать на пустое место при помощи мышки (drag & drop) ??????
-//             context.arc(100, 75, 50, 0, 2 * Math.PI);
-//             context.fillRect(x+1, y+1, cellSize-2, cellSize-2); // paint over the canvas
-            
-//         })
-//         field.setNumView(function() { // параметры шрифта для цифр
-//             context.font = "bold "+(cellSize/2)+"px Sans"
-//             context.textAlign = "center"
-//             context.textBaseline = "middle"
-//             context.fillStyle = "#FFFFFF"
-//         })
-//         context.fillStyle = "#FFE4B5"
-//         context.fillRect(0, 0, canvas.width, canvas.height)
-        
-//         field.draw(context, cellSize)
-//         field.setTime() // продолжительность игры
-//         //field.getMoves() // количесвто шагов
-
-//         function event(x, y) { // функция производит необходимые действие при клике(касанию)
-//             field.move(x, y);
-//             context.fillStyle = "#FFE4B5"
-//             context.fillRect(0, 0, canvas.width, canvas.height)
-//             field.draw(context, cellSize)
-//             if (field.victory()) { // если головоломка сложена, то пятнашки заново перемешиваются
-//                 alert("Ура! Вы решили головоломку за "+ field.getClicks() + " ходов!") // вывод сообщения о выигрыше!!
-//                 field.mix(300)
-//                 context.fillStyle = "#FFE4B5"
-//                 context.fillRect(0, 0, canvas.width, canvas.height)
-//                 field.draw(context, cellSize)
-//             }
-//         }
-//         let k = 0
-//         canvas.addEventListener('click', function(e) { // обрабатываем клики мышью
-//             var x = (e.pageX - canvas.offsetLeft) / cellSize | 0 // returns the number of pixels that the upper left corner
-//             var y = (e.pageY - canvas.offsetTop)  / cellSize | 0
-//             event(x, y) // вызов функции действия
-            
-//             time.append(`${field.getClicks()}/ `) // количество шагов ???
-//         })
-//         canvas.ontouchend = function(e) { // обрабатываем касания пальцем
-//             var x = (e.touches[0].pageX - canvas.offsetLeft) / cellSize | 0
-//             var y = (e.touches[0].pageY - canvas.offsetTop)  / cellSize | 0 
-//             event(x, y)
-//         }
-
-//         divPuzzle.append(canvas)
-//     }
-// }
 const section = document.createElement('section')
 section.classList.add('game') // add style
 document.body.append(section) //insert element after parents body
@@ -107,11 +36,12 @@ pauseMenu.classList.add('pauseMenu')
 
 const newGame = document.createElement('a')
 newGame.textContent = 'New Game'
+newGame.id = 'newGame'
 newGame.classList.add('navPause')
 
-const saveGame = document.createElement('a')
-saveGame.textContent = 'Saved Games'
-saveGame.classList.add('navPause')
+const savedGames = document.createElement('a')
+savedGames.textContent = 'Saved Games'
+savedGames.classList.add('navPause')
 
 const bestScores = document.createElement('a')
 bestScores.textContent = 'Best Scores'
@@ -125,7 +55,11 @@ const settings = document.createElement('a')
 settings.textContent = 'Settings'
 settings.classList.add('navPause')
 
-pauseMenu.append(newGame, saveGame, bestScores, rules, settings)
+pauseMenu.append(newGame, savedGames, bestScores, rules, settings)
+
+// --------------------------NEW GAME ---------------------------//
+let canvas = document.createElement('canvas');
+canvas.classList.add('canvas')
 
 // ------------------------- RULES ------------------------------ //
 let rulesContainer = document.createElement('div')
@@ -191,41 +125,14 @@ goBackSet.classList.add('goBack')
 
 settingsContainer.append(settingsTitle, label1, label1Select, goBackSet)
 
-
-// function gameFooter() {
-//     let result = '';
-//     // 
-
-//     result += `Time: ${timeOut} + Moves: ${moves} + Pause: ${pause}`
-    
-//     // for(let i=1; i<=3; i++) {
-//     //     let li = document.createElement('li');
-//     //     li.append(i);
-//     //     result.push(li);
-//     //   }
-    
-//       return result;
-      
-// }
-// footer.append(...gameFooter());
-// function createButtons() {
-//     for (let i = 0; i < 16; i++) {
-//         let button = document.createElement('button')
-//         button.innerHTML = i + 1
-//         button.classList.add('puzzleBtn')
-//         divPuzzle.append(button)
-//     }
-// }
-
 function init() {
-        let canvas = document.createElement('canvas');
-        canvas.classList.add('canvas')
         canvas.width = '410' // size of container
         canvas.height = '410'
         let cellSize = canvas.width / 4
         let context = canvas.getContext('2d');
         let field = new game() // create object of game
         field.mix(350) // перемешиваем содержимое коробки
+        
         
         // let img = new Image() // картинка-пазл
         // img.src = './image.jpg'
@@ -236,8 +143,7 @@ function init() {
             context.arc(100, 75, 50, 0, 2 * Math.PI);
             context.fillRect(x+1, y+1, cellSize-2, cellSize-2); // paint over the canvas
             
-            // context.drawImage(img, x+1, y+1, cellSize-2, cellSize-2, x+1, y+1, cellSize-2, cellSize-2); // draw the picture
-            
+            // context.drawImage(img, x+1, y+1, cellSize-2, cellSize-2, x+1, y+1, cellSize-2, cellSize-2); // draw the picture 
         })
 
         field.setNumView(function() { // параметры шрифта для цифр
@@ -251,13 +157,14 @@ function init() {
         context.fillRect(0, 0, canvas.width, canvas.height)
         field.draw(context, cellSize)
 
-        field.setTime() // продолжительность игры
+        // /field.setTime() // продолжительность игры
 
         function event(x, y) { // функция производит необходимые действие при клике(касанию)
             field.move(x, y);
             context.fillStyle = "#FFE4B5"
             context.fillRect(0, 0, canvas.width, canvas.height)
             field.draw(context, cellSize)
+            
             if (field.victory()) { // если головоломка сложена, то пятнашки заново перемешиваются
                 alert("Ура! Вы решили головоломку за "+ field.getClicks() + " ходов!") // вывод сообщения о выигрыше!!
                 field.mix(300)
@@ -285,6 +192,14 @@ function init() {
         }
 
         divPuzzle.append(canvas)
+}
+
+function setTime(timeStart) { // продолжительность игры
+    timeStart = Date.now()
+    setInterval(() => {
+        let res = new Date(Date.now() - timeStart)
+        time.textContent = `Time: ${res.getMinutes()} : ${res.getSeconds()}`
+    }, 1000)
 }
 
 function game() { // logic of game
@@ -345,7 +260,7 @@ function game() { // logic of game
         return res
     }
 
-    this.mix = function(stepCount) { // метод "перемешивает" фишки
+    this.mix = function(stepCount) { // метод "перемешивает" фишки 
         let x, y
         for (let i = 0; i < stepCount; i++) {
             let nullX = getEmpty().x
@@ -371,6 +286,9 @@ function game() { // logic of game
 		num = func
     }
     
+    this.setTime = function(func) {
+        time = func
+    }
     this.draw = function(context, size) { // рисует "пятнашки" на холсте
 		for (var i = 0; i < WIDTH; i++) {
 			for (var j = 0; j < HEIGHT; j++) {
@@ -387,26 +305,23 @@ function game() { // logic of game
         }
     }
 
-    this.setTime = function() { // продолжительность игры
-        let timeStart = Date.now()
-        setInterval(() => {
-            let res = new Date(Date.now() - timeStart)
-            time.textContent = `Time: ${res.getMinutes()} : ${res.getSeconds()}`
-        }, 1000)
-    }
-
 }
-
-// window.addEventListener("DOMContentLoaded", function () {
-//     Puzzle.init();
-//   });
-
-document.body.addEventListener("click", init())
+setTime()
+document.body.addEventListener('click', init())
 
 pause.addEventListener('click', () => {
     let isSave = confirm('Do you want to save this game?')
-    if (isSave) divPuzzle.before(pauseMenu) 
-    else divPuzzle.before(pauseMenu)
+    //localStorage.setItem('canvas')
+    if (isSave) {
+        localStorage.setItem('canvas', 'field.draw')
+        divPuzzle.before(pauseMenu) 
+    } else divPuzzle.before(pauseMenu)
+    pauseMenu.style.visibility = 'visible'
+})
+
+newGame.addEventListener('click', () => {
+    init()
+    pauseMenu.style.visibility = 'hidden'
 })
 
 rules.addEventListener('click', () => {
@@ -431,40 +346,5 @@ goBackSet.addEventListener('click', () => {
     settingsContainer.style.visibility = 'hidden'
     pauseMenu.style.visibility = 'visible'
 })
-// function pause() {
-//     let pauseMenu = document.createElement('div')
-//     pauseMenu.classList.add('shadow')
-//     let saveGame = document.createElement('a')
-//     saveGame.textContent = 'Do you want to save game?'
-//     let newGame = document.createElement('a')
-//     newGame.textContent = 'New Game'
-//     saveGame.appendChild(newGame)
-//     let savedGames = document.createElement('a')
-//     savedGames.textContent = 'Saved Games'
-//     let bestScore = document.createElement('a')
-//     bestScore.textContent = 'Best Scores'
-//     let rules = document.createElement('a')
-//     rules.textContent = 'Rules'
-// }
 
-// pause.addEventListener('click', pause())
-    
 
-// let query = () => {
-//     let num
-//     let res = []
-//     let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0]
-//     for (i = 0; i < 4; i++) {
-//         for (j = 0; j < 4; j++) {
-//             num = arr[Math.floor(0 + Math.random() * 16)]
-//             res += num
-
-//             numIndex = arr.indexOf(num)
-//             if (numIndex > -1) arr.splice(numIndex, 1)
-
-//             console.log(`${num} num, ${res} res, ${numIndex} numIndex, ${arr} arr`)
-//         }
-        
-//     }
-// }
-// query()

@@ -106,6 +106,15 @@ footer .pause:hover {
   text-shadow: white 1px 1px 0.6px;
 }
 
+.pauseMenu .navPause #navGame {
+  margin: 0;
+  width: 410px;
+  height: 410px;
+  border: 1px;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
 .rulesContainer {
   margin: 10px auto;
   font-size: 2rem;
